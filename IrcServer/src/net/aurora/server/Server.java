@@ -3,6 +3,7 @@ package net.aurora.server;
 import net.aurora.server.User.ClientType;
 import net.aurora.server.command.CommandManager;
 import net.aurora.server.command.commands.HelpCommand;
+import net.aurora.server.command.commands.SubscribeIrcCommand;
 import net.aurora.server.database.DataBase;
 import net.aurora.server.handlers.UserHandler;
 
@@ -20,7 +21,7 @@ public class Server {
 	// --- Server interns ---
 	private ServerSocket server;
 	private DataBase data;
-	private final double version = 0.21;
+	private final double version = 0.4;
 	private int port;
 
 	/** A List of all Users */
@@ -77,6 +78,7 @@ public class Server {
 
 		commandManager = new CommandManager();
 		commandManager.addCommand(new HelpCommand());
+		commandManager.addCommand(new SubscribeIrcCommand());
 		
 		
 		System.out.println("Server V" + version + " online!");
@@ -123,7 +125,9 @@ public class Server {
 
 			// Notify's the Console
 			newUser.getOutStream().println("Welcome " + newUser.getNickname());
-
+			newUser.getOutStream().println("Note: This is a beta!");
+			newUser.getOutStream().println("Bugs may occur LOL!");
+			
 			// Creates a new UserHandler
 			new Thread(new UserHandler(this, newUser)).start();
 		}

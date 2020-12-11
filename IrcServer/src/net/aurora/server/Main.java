@@ -2,7 +2,11 @@ package net.aurora.server;
 
 public class Main {
 	
+	/** The Server instance */
 	static Server server;
+	
+	// --- Timer ---
+	public static long timerCooldown = 5000;
 //	public static JSONObject jsonObject = null;
 
 	public static void main(String[] args)

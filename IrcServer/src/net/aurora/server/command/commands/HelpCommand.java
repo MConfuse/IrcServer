@@ -25,7 +25,9 @@ public class HelpCommand extends Command {
 		builder.append("| /kick (name) - Kicks the User\n");
 		builder.append("| \n");
 		builder.append("\\---------------------------");
-		stream.println(builder.toString());
+		
+//		String output = SikePackets.encrypt(builder.toString());
+		stream.println(builder);
 	}
 
 }

@@ -21,8 +21,15 @@ public class User {
 	private final List<String> adminPasswords;
 	private final List<String> staffPasswords;
 	private final List<String> friendPasswords;
-	public final UserType rank;
-	public final ClientType type;
+	public final UserType userType;
+	public final ClientType clientType;
+	
+	// --- User settings ---
+	//    --- Staff Settings ---
+	private boolean chatCooldown = true;
+	
+	//    --- Normal Settings ---
+	private boolean fullname;
 	
 	// --- Last private message ---
 	private User lastPrivateMessage = null;
@@ -49,7 +56,8 @@ public class User {
 		this.streamOut = new PrintStream(client.getOutputStream());
 		this.streamIn = client.getInputStream();
 		this.client = client;
-		this.type = type;
+		this.clientType = type;
+		this.subscribedIrcs.add(type);
 		this.nickname = name;
 		this.name = name;
 		this.password = password;
@@ -61,7 +69,7 @@ public class User {
 		staffPasswords = Arrays.asList(/* Token for the Staff Rank */			"lDIAOWFMEI45+OFfkvn+9qaiweDLWP0LUB137#WQvmaoiDLWAnvsq#woDPAWDFwp");
 		friendPasswords = Arrays.asList(/* Token for the Friend Rank */ 		"vgiwLDWZ+ivh#bwibvealoqLK1+9QCQDRnvnmLi#rzghbDWJAU+198hfgiwq92WM");
 
-		rank = isStaff(password);
+		userType = isStaff(password);
 	}
 
 	/**
@@ -103,7 +111,7 @@ public class User {
 	
 	public enum ClientType
 	{
-		AURORA("Aurora"), KOTCLIENT("KotClient"), VOYAGER("Voyager");
+		AURORA("Aurora"), KOTCLIENT("Kot"), VOYAGER("Voyager");
 		
 		public final String name;
 		
@@ -139,7 +147,7 @@ public class User {
 
 	public String getNickname()
 	{
-		return rank != UserType.USER ? rank.prefix + " " + this.nickname : this.nickname;
+		return userType != UserType.USER ? userType.prefix + " " + this.nickname : this.nickname;
 	}
 
 	public String getName()
@@ -160,6 +168,26 @@ public class User {
 	public String getPassword()
 	{
 		return password;
+	}
+
+	public boolean isChatCooldown()
+	{
+		return chatCooldown;
+	}
+
+	public void setChatCooldown(boolean chatCooldown)
+	{
+		this.chatCooldown = chatCooldown;
+	}
+
+	public boolean isFullname()
+	{
+		return fullname;
+	}
+
+	public void setFullname(boolean fullname)
+	{
+		this.fullname = fullname;
 	}
 
 	public User getLastPrivateMessage()
