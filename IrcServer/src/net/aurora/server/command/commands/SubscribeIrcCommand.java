@@ -16,9 +16,81 @@ public class SubscribeIrcCommand extends Command {
 	@Override
 	public void onCommand(String command, String[] args, String message, User user, PrintStream stream) throws Exception
 	{
-//		if (args.length == 0)
+		if (args.length == 1 && args[0].equals(""))
 		{
-			stream.println("Coming soon ™");
+			StringBuilder builder = new StringBuilder();
+			
+			builder.append("/---------------------------\n");
+			builder.append("| \n");
+			builder.append("| Rules:\n");
+			builder.append("|   - You cannot unsubscribe from your\n");
+			builder.append("|     Clients IRC.\n");
+			builder.append("| \n");
+			builder.append("| /subscribe list - Shows the available Clients\n");
+			builder.append("| \n");
+			builder.append("\\---------------------------");
+			
+			stream.println(builder);
+			return;
+		}
+		else
+		{
+			if (args[0].equalsIgnoreCase("list"))
+			{
+				StringBuilder builder = new StringBuilder();
+				
+				builder.append("/---------------------------\n");
+				builder.append("| \n");
+				builder.append("| Clients you can Subscribe to:\n");
+				
+				for (ClientType type : User.ClientType.values())
+					builder.append("|   - " + type.name + "\n");
+				
+				builder.append("| \n");
+				builder.append("\\---------------------------");
+				
+				stream.println(builder);
+				return;
+			}
+			
+			ClientType type = getType(args[0]);
+			
+			if (type == null)
+			{
+				// Nothing found
+				stream.println("§7[§3System§7] §cThere is no such ClientType: " + args[0] + ".");
+				stream.println("§7[§3System§7] §c/" + getName() + " for more info!");
+				
+				return;
+			}
+			else if (type == user.clientType)
+			{
+				// Type is the same as Client
+				stream.println("§7[§3System§7] §cYou cannot unsubscribe from your Client's IRC!");
+				stream.println("§7[§3System§7] §c/" + getName() + " for more info!");
+				
+				return;
+			}
+			else if (user.subscribedIrcs.contains(type))
+			{
+				user.subscribedIrcs.remove(type);
+				
+				stream.println("§7[§3System§7] Successfully §cunsubscribed §7from §5" + type.name + "'s §7IRC!");
+				
+				return;
+			}
+			else if (!user.subscribedIrcs.contains(type))
+			{
+				user.subscribedIrcs.add(type);
+				
+				stream.println("§7[§3System§7] Successfully §asubscribed §7to §5" + type.name + "'s §7IRC!");
+				
+				return;
+			}
+			else
+			{
+				stream.println("Something");
+			}
 			
 		}
 		
@@ -38,7 +110,7 @@ public class SubscribeIrcCommand extends Command {
 		{
 //			System.out.println(type.name);
 			
-			if (type.name.equals(paramString))
+			if (type.name.equalsIgnoreCase(paramString))
 				return type;
 			
 		}

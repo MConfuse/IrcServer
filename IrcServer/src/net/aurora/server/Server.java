@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -94,42 +95,50 @@ public class Server {
 			 * 	- Line 3 Password: Password if you are staff
 			 */
 			
-			Socket client = this.server.accept(); // Accepts every connection lMao
-			Scanner scanner = new Scanner(client.getInputStream());
-			String nickname = scanner.nextLine();
-			String password = null;
-
-			nickname = nickname.replace(",", "");
-			nickname = nickname.replace(" ", "_").substring(0, nickname.length() - 1);
-			
-			// Sets the ClientType
-			ClientType type = getType(scanner.nextLine().trim());
-			if (type == null)
+			try
 			{
-				PrintStream stream = new PrintStream(client.getOutputStream());
-				stream.println("Disconnected!");
+				Socket client = this.server.accept(); // Accepts every connection lMao
+				Scanner scanner = new Scanner(client.getInputStream());
+				String nickname = scanner.nextLine();
+				String password = null;
 				
-				client.close();
-				continue;
+				nickname = nickname.replace(",", "");
+				nickname = nickname.replace(" ", "_").substring(0, nickname.length() - 1);
+				
+				// Sets the ClientType
+				ClientType type = getType(scanner.nextLine().trim());
+				if (type == null)
+				{
+					PrintStream stream = new PrintStream(client.getOutputStream());
+					stream.println("Disconnected!");
+					
+					client.close();
+					continue;
+				}
+				
+				// Retrieves the Token
+				password = scanner.nextLine().trim();
+				
+				// Logs User in the Console
+				System.out.println("New User: " + nickname + " (" + client.getInetAddress().getHostAddress() + ") " + type);
+				
+				// Adds the User
+				User newUser = new User(client, type, nickname, password);
+				this.clients.add(newUser);
+				
+				// Notify's the Console
+				newUser.getOutStream().println("Welcome " + newUser.getNickname());
+				newUser.getOutStream().println("Note: This is a beta!");
+				newUser.getOutStream().println("Bugs may occur LOL!");
+				
+				// Creates a new UserHandler
+				new Thread(new UserHandler(this, newUser)).start();
+			}
+			catch (NoSuchElementException e)
+			{
+				;
 			}
 			
-			// Retrieves the Token
-			password = scanner.nextLine().trim();
-			
-			// Logs User in the Console
-			System.out.println("New User: " + nickname + " (" + client.getInetAddress().getHostAddress() + ") " + type);
-			
-			// Adds the User
-			User newUser = new User(client, type, nickname, password);
-			this.clients.add(newUser);
-
-			// Notify's the Console
-			newUser.getOutStream().println("Welcome " + newUser.getNickname());
-			newUser.getOutStream().println("Note: This is a beta!");
-			newUser.getOutStream().println("Bugs may occur LOL!");
-			
-			// Creates a new UserHandler
-			new Thread(new UserHandler(this, newUser)).start();
 		}
 
 	}
