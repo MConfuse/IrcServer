@@ -27,6 +27,7 @@ public class User {
 	// --- User settings ---
 	//    --- Staff Settings ---
 	private boolean chatCooldown = true;
+	private boolean nicked;
 	
 	//    --- Normal Settings ---
 	private boolean fullname;
@@ -99,6 +100,16 @@ public class User {
 	}
 	
 	/**
+	 * Easy boolean method to determine whether or not the User is Staff or not.
+	 * 
+	 * @return True if User is staff
+	 */
+	public boolean isStaff()
+	{
+		return !(userType.equals(UserType.USER) || userType.equals(UserType.VERIFIED));
+	}
+	
+	/**
 	 * TODO: Add a database to actually check if the User is actually Verified
 	 * 
 	 * @param name Name of the User.
@@ -114,10 +125,22 @@ public class User {
 		AURORA("Aurora"), KOTCLIENT("Kot"), VOYAGER("Voyager");
 		
 		public final String name;
+		/** The Delay between Messages for each Client */
+		private long messageCooldown = 5000L;
 		
 		ClientType(String name)
 		{
 			this.name = name;
+		}
+
+		public long getMessageCooldown()
+		{
+			return messageCooldown;
+		}
+
+		public void setMessageCooldown(long messageCooldown)
+		{
+			this.messageCooldown = messageCooldown;
 		}
 		
 	}
@@ -145,9 +168,18 @@ public class User {
 		return this.streamIn;
 	}
 
+	/**
+	 * @return Returns the Nickname that should be displayed based on the Users rank
+	 *         and nick state
+	 */
 	public String getNickname()
 	{
-		return userType != UserType.USER ? userType.prefix + " " + this.nickname : this.nickname;
+		return ((userType != UserType.USER) && !nicked) ? userType.prefix + " " + this.nickname : this.nickname;
+	}
+
+	public void setNickname(String nickname)
+	{
+		this.nickname = nickname;
 	}
 
 	public String getName()
@@ -178,6 +210,16 @@ public class User {
 	public void setChatCooldown(boolean chatCooldown)
 	{
 		this.chatCooldown = chatCooldown;
+	}
+
+	public boolean isNicked()
+	{
+		return nicked;
+	}
+
+	public void setNicked(boolean nicked)
+	{
+		this.nicked = nicked;
 	}
 
 	public boolean isFullname()

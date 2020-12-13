@@ -19,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
 
+	public static Server instance;
+	
 	// --- Server interns ---
 	private ServerSocket server;
 	private DataBase data;
@@ -36,8 +38,12 @@ public class Server {
 	private boolean debugmode = false;
 	private static boolean running = true;
 	
-	// --- Server Exception HashMap ---
+	/** Server Exception HashMap */
 	public final ConcurrentHashMap<String, String> serverExceptions = new ConcurrentHashMap<String, String>();
+	/** Server Warnings HashMap */
+	public final ConcurrentHashMap<String, String> serverWarnings = new ConcurrentHashMap<String, String>();
+	/** Server Notifications HashMap */
+	public final ConcurrentHashMap<String, String> serverNotifications = new ConcurrentHashMap<String, String>();
 
 	/**
 	 * Creates a new Server instance
@@ -48,6 +54,8 @@ public class Server {
 	 */
 	public Server(String host, int port, boolean debug)
 	{
+		instance = this;
+		
 		this.port = port;
 		this.clients = new ArrayList<User>();
 		this.debugmode = debug;
@@ -55,9 +63,14 @@ public class Server {
 		// --- Client Exceptions ---
 		serverExceptions.put("kicked", "IrcServerException:Kicked");
 		serverExceptions.put("banned", "IrcServerException:Banned");
-		
 		// --- Server Exceptions ---
 		serverExceptions.put("closed", "IrcServerException:Server_Closed");
+		
+		// --- Warnings (All kinds) ---
+		serverWarnings.put("nick", "IrcServerWarning:NickPermission-" /** Nickname */); // Notification for non staff
+		
+		// --- Notifications (All kinds) ---
+		serverNotifications.put("nick", "IrcServerNotification:NickChanged-" /** Nickname */);
 	}
 
 	/**

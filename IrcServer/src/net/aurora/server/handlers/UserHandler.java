@@ -47,16 +47,20 @@ public class UserHandler implements Runnable {
 			String message = sc.nextLine();
 //			String message = SikePackets.decrypt(sc.nextLine());
 			message = message.replace("§", "");
+			
+			/** Checks if the User is still being rate limited */
 			if (!timer.hasTimeElapsed(Main.timerCooldown, true) && user.isChatCooldown())
 			{
 				user.getOutStream().println("§7[§3System§7] §cChat cooldown still active!");
 				continue;
 			}
 
+			/** Trims the message down to 120 Characters */
 			if (message.length() > 120)
 				message = message.substring(0, 119);
 
-			if (message.startsWith("@all") && !(user.userType.equals(User.UserType.VERIFIED) || user.userType.equals(User.UserType.USER)))
+			/** Checks if the message is either a Broadcast to ALL Clients or Private message */
+			if (message.startsWith("@all") && user.isStaff()) // Broadcast
 			{
 				if (message.contains(" "))
 				{
@@ -66,7 +70,7 @@ public class UserHandler implements Runnable {
 
 				continue;
 			}
-			else if (message.charAt(0) == '@')
+			else if (message.charAt(0) == '@') // Private message
 			{
 				if (message.contains(" "))
 				{
@@ -80,6 +84,7 @@ public class UserHandler implements Runnable {
 				continue;
 			}
 
+			/** Checks if the message is a Command */
 			if (message.charAt(0) == '/')
 			{
 				try
@@ -95,6 +100,7 @@ public class UserHandler implements Runnable {
 				continue;
 			}
 
+			/** If nothing above was true, the message will be sent to the Users Clients IRC */
 //			message = SikePackets.encrypt(message);
 			broadcastMessageToSpecificClient(message, user);
 		}
