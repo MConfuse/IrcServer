@@ -1,11 +1,4 @@
-package net.aurora.server;
-
-import net.aurora.server.User.ClientType;
-import net.aurora.server.command.CommandManager;
-import net.aurora.server.command.commands.HelpCommand;
-import net.aurora.server.command.commands.SubscribeIrcCommand;
-import net.aurora.server.database.DataBase;
-import net.aurora.server.handlers.UserHandler;
+package de.confuse;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -16,6 +9,15 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
+
+import de.confuse.User.ClientType;
+import de.confuse.command.CommandManager;
+import de.confuse.command.commands.HelpCommand;
+import de.confuse.command.commands.SubscribeIrcCommand;
+import de.confuse.command.commands.UpdateNick;
+import de.confuse.confFile.ConfFileReader;
+import de.confuse.database.DataBase;
+import de.confuse.handlers.UserHandler;
 
 public class Server {
 
@@ -65,6 +67,8 @@ public class Server {
 		serverExceptions.put("banned", "IrcServerException:Banned");
 		// --- Server Exceptions ---
 		serverExceptions.put("closed", "IrcServerException:Server_Closed");
+		serverExceptions.put("error", "IrcServerException:Error");
+		serverExceptions.put("cmdError", "IrcServerException:Cmd_Error"); // Sent when command failed
 		
 		// --- Warnings (All kinds) ---
 		serverWarnings.put("nick", "IrcServerWarning:NickPermission-" /** Nickname */); // Notification for non staff
@@ -93,6 +97,7 @@ public class Server {
 		commandManager = new CommandManager();
 		commandManager.addCommand(new HelpCommand());
 		commandManager.addCommand(new SubscribeIrcCommand());
+		commandManager.addCommand(new UpdateNick());
 		
 		
 		System.out.println("Server V" + version + " online!");
@@ -110,17 +115,17 @@ public class Server {
 			
 			try
 			{
-				Socket client = this.server.accept(); // Accepts every connection lMao
+				Socket client = server.accept(); // Accepts every connection lMao
 				Scanner scanner = new Scanner(client.getInputStream());
-				String nickname = scanner.nextLine();
-				String password = null;
+				ConfFileReader reader = new ConfFileReader(scanner.nextLine());
 				
-				nickname = nickname.replace(",", "");
-				nickname = nickname.replace(" ", "_").substring(0, nickname.length() - 1);
+				// Password and Nick
+				String nickname = reader.getField("login").getValue("nickname");
+				String password = reader.getField("login").getValue("password");
 				
 				// Sets the ClientType
-				ClientType type = getType(scanner.nextLine().trim());
-				if (type == null)
+				ClientType type = getType(reader.getField("login").getValue("type"));
+				if (type == null || nickname == null)
 				{
 					PrintStream stream = new PrintStream(client.getOutputStream());
 					stream.println("Disconnected!");
@@ -129,15 +134,12 @@ public class Server {
 					continue;
 				}
 				
-				// Retrieves the Token
-				password = scanner.nextLine().trim();
-				
 				// Logs User in the Console
 				System.out.println("New User: " + nickname + " (" + client.getInetAddress().getHostAddress() + ") " + type);
 				
 				// Adds the User
 				User newUser = new User(client, type, nickname, password);
-				this.clients.add(newUser);
+				clients.add(newUser);
 				
 				// Notify's the Console
 				newUser.getOutStream().println("Welcome " + newUser.getNickname());

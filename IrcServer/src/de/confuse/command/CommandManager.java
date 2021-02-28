@@ -1,10 +1,10 @@
-package net.aurora.server.command;
+package de.confuse.command;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.aurora.server.User;
+import de.confuse.User;
 
 /**
  * Commands for managing Settings and other stuff on a text basis.

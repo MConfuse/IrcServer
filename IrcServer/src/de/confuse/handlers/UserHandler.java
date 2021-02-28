@@ -1,12 +1,12 @@
-package net.aurora.server.handlers;
-
-import net.aurora.server.Main;
-import net.aurora.server.Server;
-import net.aurora.server.User;
-import net.aurora.server.command.CommandManager;
-import net.aurora.server.util.TimeHelper;
+package de.confuse.handlers;
 
 import java.util.Scanner;
+
+import de.confuse.Main;
+import de.confuse.Server;
+import de.confuse.User;
+import de.confuse.command.CommandManager;
+import de.confuse.util.TimeHelper;
 
 /**
  * Handles all incoming traffic by the User. This Class should be created for

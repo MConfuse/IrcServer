@@ -1,9 +1,9 @@
-package net.aurora.server.command.commands;
+package de.confuse.command.commands;
 
 import java.io.PrintStream;
 
-import net.aurora.server.User;
-import net.aurora.server.command.Command;
+import de.confuse.User;
+import de.confuse.command.Command;
 
 public class HelpCommand extends Command {
 

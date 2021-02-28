@@ -1,4 +1,4 @@
-package net.aurora.server;
+package de.confuse;
 
 public class Main {
 	

@@ -1,4 +1,4 @@
-package net.aurora.server;
+package de.confuse;
 
 /**
  * En-/decrypting algorithm for the in- and outgoing traffic.

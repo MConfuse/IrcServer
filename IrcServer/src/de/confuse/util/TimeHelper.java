@@ -1,4 +1,4 @@
-package net.aurora.server.util;
+package de.confuse.util;
 
 public class TimeHelper {
 

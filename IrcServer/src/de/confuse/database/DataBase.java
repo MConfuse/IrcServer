@@ -1,4 +1,4 @@
-package net.aurora.server.database;
+package de.confuse.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,4 +1,4 @@
-package net.aurora.server;
+package de.confuse;
 
 import java.io.IOException;
 import java.io.InputStream;

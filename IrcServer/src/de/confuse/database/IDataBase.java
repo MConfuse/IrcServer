@@ -1,4 +1,4 @@
-package net.aurora.server.database;
+package de.confuse.database;
 
 public interface IDataBase {
 
