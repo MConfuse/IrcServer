@@ -69,7 +69,7 @@ public class ConfFileField {
 			index++;
 		}
 
-		return name + "{" + builder.toString() + "};";
+		return name + "{" + builder.toString() + "};\r";
 	}
 
 }

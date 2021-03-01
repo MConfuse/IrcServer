@@ -102,7 +102,7 @@ public class UserHandler implements Runnable {
 
 			/** If nothing above was true, the message will be sent to the Users Clients IRC */
 //			message = SikePackets.encrypt(message);
-			broadcastMessageToSpecificClient(message, user);
+			broadcastMessageToClient(message, user);
 		}
 
 		server.removeUser(user);
@@ -117,7 +117,7 @@ public class UserHandler implements Runnable {
 	 * @param msg        The Message that should be sent
 	 * @param userSender
 	 */
-	public void broadcastMessageToSpecificClient(String msg, User userSender)
+	public void broadcastMessageToClient(String msg, User userSender)
 	{
 		for (User client : server.clients)
 		{
@@ -162,7 +162,7 @@ public class UserHandler implements Runnable {
 			if (client.getName().equals(user) && client != userSender)
 			{
 				// --- (Should) Encrypt the whole thing LOL ---
-				String toSender = (userSender.getNickname() + " -> " + client.getNickname() + "§8: §7");
+				String toSender = ("(Private) " + userSender.getNickname() + " -> " + client.getNickname() + "§8: §7");
 				String toReceiver = ("(Privat) " + userSender.getNickname() + " -> ");
 //				msg = SikePackets.encrypt(msg);
 

@@ -13,11 +13,14 @@ import java.util.List;
  * This writer will take all added {@link ConfFileField}s and create a new File
  * following the .CONFF formatting.
  * 
- * @version 1
- * @author Confuse/xXConfusedJenni#5117
+ * @version 1.1
+ * @author Confuse/Confuse#5117
  *
  */
 public class ConfFileWriter {
+
+	/** The Version of the ConfFileWriter */
+	public static String VERSION = "ConfFileVersion: 1.1 | Created by Confuse/Confuse#5117 | Note: At some point this formatting might not be supported anymore by the File reader";
 
 	/** The target file which the System will use to save the data in */
 	private File file;
@@ -39,6 +42,19 @@ public class ConfFileWriter {
 		this.file = file;
 		this.fileType = addFileType;
 	}
+	
+	/**
+	 * Creates a new {@link ConfFileWriter} object that is needed to write a file in
+	 * the .CONFF file format. <br>
+	 * This Constructor will automatically set the {@link #fileType} boolean to false.
+	 * 
+	 * @param file        The file where the ConfFile should be written to
+	 */
+	public ConfFileWriter(File file)
+	{
+		this.file = file;
+		this.fileType = false;
+	}
 
 	/**
 	 * Method to write all added {@link ConfFileField}s to the {@link File} that was
@@ -50,6 +66,7 @@ public class ConfFileWriter {
 	public void writeFile() throws IOException
 	{
 		PrintWriter writer = new PrintWriter(new FileWriter(file.getAbsolutePath() + (fileType ? ".conff" : "")));
+		writer.println(VERSION + "\r#");
 
 		for (ConfFileField field : fields)
 		{

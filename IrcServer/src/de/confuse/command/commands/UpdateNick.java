@@ -11,7 +11,8 @@ public class UpdateNick extends Command {
 
 	public UpdateNick()
 	{
-		super("nick", new String[] {}, "/nick (name)", "name", "Changes your IRC Username!");
+		// uName is the alias for normal users to update their nick.
+		super("nick", new String[] {"uname"}, "/nick (name)", "name", "Changes your IRC Username!");
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class UpdateNick extends Command {
 		 * 
 		 */
 		
-		ConfFileReader reader = new ConfFileReader(message.substring(message.indexOf(" ")).trim());
+		ConfFileReader reader = new ConfFileReader(message.substring(message.indexOf(" ")).trim(), 1D);
 		
 		try
 		{
@@ -42,7 +43,7 @@ public class UpdateNick extends Command {
 				// --- Notifies the User about the changed Nick ---
 				stream.println(Server.instance.serverNotifications.get("nick") + name);
 			}
-			else
+			else // If user is not staff, the normal name will be updated.
 			{
 				// TODO Test if this is exploitable
 				String name = reader.getField("data").getValue("ingameName");
@@ -50,7 +51,7 @@ public class UpdateNick extends Command {
 				if (name == null)
 					throw new Exception("Name not specified!");
 				
-				user.setNickname(name);
+				user.setName(name);
 				user.setNicked(false);
 				
 				// --- Notifies the User about the failed Nick ---

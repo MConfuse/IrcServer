@@ -3,7 +3,6 @@ package de.confuse.confFile;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,13 +33,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * sensitive! If the key was found it will return the assigned value in form of
  * a String. <br>
  * <br>
+ * --- Important: --- <br>
+ * This {@link ConfFileReader} Supports the following File Versions: <br>
+ * 1.0 - 1.1 <br>
+ * Newer Versions File Versions might not be readable anymore! <br>
+ * <br>
  * Note: Having characters like the following ones within the key or value might
  * cause the retrieval to fail or not return the correct values: "" , { } <br>
  * Also note that in case you clean this instance up without having saved all
  * the needed data to your program you will have to reread the entire file using
  * a new instance of this class!
  * 
- * @version 1
+ * @version 1.1
  * @author Confuse/xXConfusedJenni#5117
  *
  */
@@ -48,6 +52,11 @@ public class ConfFileReader {
 
 	/** A list containing all results of the input file */
 	private List<ConfResult> results = new ArrayList<ConfResult>();
+	/**
+	 * The Version of the {@link ConfFileWriter} that wrote this File, depending on
+	 * the Version this reader might not be able to read the content
+	 */
+	private double fileVersion = -1D;
 
 	/**
 	 * Creates a new instance of this class. Instead of a File that should be read,
@@ -55,25 +64,13 @@ public class ConfFileReader {
 	 * it up like usual. This method is intended for special use cases.
 	 * 
 	 * @param content A {@link String} following the .CONFF formatting
+	 * @param version The version of the {@link ConfFileWriter} that has written this content
+	 * @throws Exception Thrown when the {@link #fileVersion} was not specified
 	 */
-	public ConfFileReader(String content)
+	public ConfFileReader(String content, double version) throws Exception
 	{
-		System.out.println(content);
-		String[] lineSplit = content.split(";");
-
-		for (String string : lineSplit)
-		{
-			// If it is a comment, skip it
-			if (string.startsWith("#"))
-				continue;
-
-			// Splitting up the different values
-			results.add(new ConfResult(string.substring(0, string.indexOf("{")),
-					string.substring(string.indexOf("{") + 1, string.lastIndexOf("}"))));
-		}
-
-		System.out.println("--- End ---");
-		System.out.println();
+		this.fileVersion = version;
+		readContent(content);
 	}
 
 	/**
@@ -81,16 +78,57 @@ public class ConfFileReader {
 	 * mind this class can only work when the file follows the .CONFF formatting.
 	 * 
 	 * @param file The {@link File} which is read
-	 * @throws Exception Mostly an IOException in case of a non existent file/other issues
+	 * @throws Exception This Constructor throws an Exception because of two
+	 *                   reasons: <br>
+	 *                   Either you did not Specify the {@link #fileVersion} using
+	 *                   the {@link #setFileVersion(double)} or there was an error
+	 *                   with the specified {@link File}
 	 */
-	public ConfFileReader(File file) throws IOException
+	public ConfFileReader(File file) throws Exception
 	{
-		String line;
 		BufferedReader reader = new BufferedReader(new FileReader(file));
+		boolean isHeader = true;
+		String line;
 
 		while ((line = reader.readLine()) != null)
 		{
-			String[] lineSplit = line.split(";");
+			// Checks if the read line is the first line of the File
+			if (isHeader)
+			{
+				isHeader = false;
+
+				// If there is a Version set the Version variable
+				if (line.startsWith("ConfFileVersion:"))
+				{
+					// Retrieves the Version
+					String version = line.substring(line.indexOf(":") + 2, line.indexOf("C", 1) - 3);
+					fileVersion = Double.parseDouble(version);
+
+					continue;
+				}
+
+			}
+
+			readContent(line);
+		}
+
+		reader.close();
+	}
+
+	/**
+	 * Creates the {@link ConfResult}s using the input. <br>
+	 * Note: This method only works with correctly formatted Strings.
+	 * 
+	 * @param paramContent The String that contains the ConfField/s.
+	 */
+	private void readContent(String paramContent) throws Exception
+	{
+		if (fileVersion == -1D)
+			throw new Exception("File Version was not specified!");
+
+		if (fileVersion < 2)
+		{
+			String[] lineSplit = paramContent.split(";");
 
 			for (String string : lineSplit)
 			{
@@ -105,7 +143,6 @@ public class ConfFileReader {
 
 		}
 
-		reader.close();
 	}
 
 	/**
@@ -122,6 +159,7 @@ public class ConfFileReader {
 
 		return null;
 	}
+
 
 	/**
 	 * Debug method. <br>
@@ -149,6 +187,29 @@ public class ConfFileReader {
 			resultHash.put(keys.get(i), values.get(i));
 
 		return resultHash;
+	}
+
+	public double getFileVersion()
+	{
+		return fileVersion;
+	}
+
+	public void setFileVersion(double fileVersion)
+	{
+		this.fileVersion = fileVersion;
+	}
+	
+	/**
+	 * @return A list of all {@link ConfResult}s in this instance.
+	 */
+	public List<ConfResult> getResults()
+	{
+		return results;
+	}
+
+	public void setResults(List<ConfResult> results)
+	{
+		this.results = results;
 	}
 
 }

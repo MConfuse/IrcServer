@@ -18,6 +18,11 @@ public class HelpCommand extends Command {
 		StringBuilder builder = new StringBuilder();
 		builder.append("/---------------------------\n");
 		builder.append("| \n");
+		builder.append("| IRC by Confuse ");
+		builder.append("| \n");
+		builder.append("| /uname - Updates your IRC name\n");
+		builder.append("| \n");
+		builder.append("|------ Staff Commands -----");
 		builder.append("| /info (name) - Gives you Info about the User\n");
 		builder.append("| /nick (nick) - Changes your Name!\n");
 		builder.append("| /hide - Un-/hides your rank!\n");

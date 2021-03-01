@@ -6,7 +6,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -117,7 +116,7 @@ public class Server {
 			{
 				Socket client = server.accept(); // Accepts every connection lMao
 				Scanner scanner = new Scanner(client.getInputStream());
-				ConfFileReader reader = new ConfFileReader(scanner.nextLine());
+				ConfFileReader reader = new ConfFileReader(scanner.nextLine(), 1D);
 				
 				// Password and Nick
 				String nickname = reader.getField("login").getValue("nickname");
@@ -149,7 +148,7 @@ public class Server {
 				// Creates a new UserHandler
 				new Thread(new UserHandler(this, newUser)).start();
 			}
-			catch (NoSuchElementException e)
+			catch (Exception e)
 			{
 				;
 			}

@@ -27,10 +27,13 @@ public class User {
 	// --- User settings ---
 	//    --- Staff Settings ---
 	private boolean chatCooldown = true;
-	private boolean nicked;
+	private boolean nicked = false;
+	/** Only affects prefix when nicked! */
+	private boolean showPrefix = true;
 	
 	//    --- Normal Settings ---
-	private boolean fullname;
+	/** If false, this will only show the first 5 letters of your name */
+	private boolean fullname = false;
 	
 	// --- Last private message ---
 	private User lastPrivateMessage = null;
@@ -174,17 +177,45 @@ public class User {
 	 */
 	public String getNickname()
 	{
-		return ((userType != UserType.USER) && !nicked) ? userType.prefix + " " + this.nickname : this.nickname;
+		/*
+		 * If user is not a normal user AND NOT nicked, it will use the showPrefix
+		 * setting and the getName method to get your name.
+		 * 
+		 * else if user is not a normal user and nicked, it will use the showPrefix
+		 * setting and the chosen nickname.
+		 * 
+		 * Or it will use the user prefix and the the getName method to display your
+		 * name.
+		 * 
+		 */
+		return ((userType != UserType.USER) && !nicked) ? (showPrefix ? userType.prefix + " " + getName() : getName())
+				: (userType != UserType.USER && nicked ? (showPrefix ? userType.prefix + " " + this.nickname : this.nickname)
+						: userType.prefix + " " + this.getName());
 	}
 
+	/**
+	 * Sets the nickname of this User to the specified string. <br>
+	 * <br>
+	 * --- Important ---<br>
+	 * Nicknames have a maximum length of 15 characters!
+	 * 
+	 * @param nickname The new nick of this user
+	 */
 	public void setNickname(String nickname)
 	{
-		this.nickname = nickname;
+		this.nickname = nickname.length() > 15 ? nickname.substring(0, 14) : nickname;
 	}
 
+	/**
+	 * Easy method to retrieve the users name based on their preferences. <br>
+	 * If the user for example does not want to show their full in-game name, this
+	 * method will always respect that.
+	 * 
+	 * @return the name of the User
+	 */
 	public String getName()
 	{
-		return name;
+		return fullname ? name : name.substring(0, 5);
 	}
 
 	public void setName(String name)
