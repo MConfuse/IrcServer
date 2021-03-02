@@ -25,7 +25,9 @@ public class UpdateNick extends Command {
 		 * 
 		 */
 		
-		ConfFileReader reader = new ConfFileReader(message.substring(message.indexOf(" ")).trim(), 1D);
+		System.out.println(message);
+		System.out.println(message.substring(5));
+		ConfFileReader reader = new ConfFileReader(message.substring(5), 1D);
 		
 		try
 		{
@@ -41,7 +43,7 @@ public class UpdateNick extends Command {
 				user.setNicked(true);
 				
 				// --- Notifies the User about the changed Nick ---
-				stream.println(Server.instance.serverNotifications.get("nick") + name);
+				stream.println(Server.instance.serverNotifications.get("nick") + "name\"" + name + "};");
 			}
 			else // If user is not staff, the normal name will be updated.
 			{
@@ -55,12 +57,13 @@ public class UpdateNick extends Command {
 				user.setNicked(false);
 				
 				// --- Notifies the User about the failed Nick ---
-				stream.println(Server.instance.serverWarnings.get("nick") + name);
+				stream.println(Server.instance.serverWarnings.get("nick"));
 			}
 			
 		}
 		catch (Exception e)
 		{
+			System.out.println(e.getMessage());
 			stream.println(Server.instance.serverExceptions.get("cmdError"));
 		}
 		

@@ -3,7 +3,7 @@ package de.confuse.irc.handlers;
 import java.util.Scanner;
 
 import de.confuse.irc.IrcManager;
-import de.confuse.irc.message.IrcMessage;
+import de.confuse.irc.interfaces.IrcMessage;
 
 public class MessageReceivedHandler implements Runnable {
 
@@ -35,14 +35,14 @@ public class MessageReceivedHandler implements Runnable {
 			{
 				try
 				{
-					System.out.println("[MessageHandler notification] §c" + getTagValue(tmp).replaceAll("->", "§8->§7"));
-					
-					for (IrcMessage clazz : IrcManager.classes)
-					{
-						IrcMessage ircM = clazz;
-						ircM.messageReceived(tmp);
-					}
-					
+//					System.out.println(tmp);
+//					System.out
+//							.println("[MessageHandler notification] §c" + getTagValue(tmp).replaceAll("->", "§8->§7"));
+
+					if (!MessageHandler.checkIncomingMessage(tmp))
+						for (IrcMessage clazz : IrcManager.messageInterfaces)
+							clazz.messageReceived(tmp);
+
 				}
 				catch (Exception ignore)
 				{

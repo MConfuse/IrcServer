@@ -125,7 +125,7 @@ public class User {
 	
 	public enum ClientType
 	{
-		AURORA("Aurora"), KOTCLIENT("Kot"), VOYAGER("Voyager");
+		AURORA("Aurora"), KOTCLIENT("Kot"), CATSENSE("CatSense");
 		
 		public final String name;
 		/** The Delay between Messages for each Client */

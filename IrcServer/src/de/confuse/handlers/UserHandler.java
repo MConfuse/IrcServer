@@ -43,7 +43,6 @@ public class UserHandler implements Runnable {
 		// Has user been terminated?
 		while (sc.hasNextLine())
 		{
-			
 			String message = sc.nextLine();
 //			String message = SikePackets.decrypt(sc.nextLine());
 			message = message.replace("§", "");
@@ -55,6 +54,12 @@ public class UserHandler implements Runnable {
 				continue;
 			}
 
+			if (message.length() == 0)
+				continue;
+			
+			// TODO: Remove
+			System.out.println(message);
+			
 			/** Trims the message down to 120 Characters */
 			if (message.length() > 120)
 				message = message.substring(0, 119);
@@ -163,7 +168,7 @@ public class UserHandler implements Runnable {
 			{
 				// --- (Should) Encrypt the whole thing LOL ---
 				String toSender = ("(Private) " + userSender.getNickname() + " -> " + client.getNickname() + "§8: §7");
-				String toReceiver = ("(Privat) " + userSender.getNickname() + " -> ");
+				String toReceiver = ("(Private) " + userSender.getNickname() + " -> ");
 //				msg = SikePackets.encrypt(msg);
 
 				client.setLastPrivateMessage(userSender);

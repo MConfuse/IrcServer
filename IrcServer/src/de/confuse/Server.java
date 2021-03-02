@@ -25,7 +25,7 @@ public class Server {
 	// --- Server interns ---
 	private ServerSocket server;
 	private DataBase data;
-	private final double version = 0.4;
+	private final double version = 0.5;
 	private int port;
 
 	/** A List of all Users */
@@ -61,19 +61,28 @@ public class Server {
 		this.clients = new ArrayList<User>();
 		this.debugmode = debug;
 		
+		// TODO: Update this to ConfFields so it's not as bad of a mess lOl
+		
 		// --- Client Exceptions ---
-		serverExceptions.put("kicked", "IrcServerException:Kicked");
-		serverExceptions.put("banned", "IrcServerException:Banned");
+//		serverExceptions.put("kicked", "IrcServerException:Kicked");
+		serverExceptions.put("kicked", "IrcServerException{\"reason\"Kicked};");
+//		serverExceptions.put("banned", "IrcServerException:Banned");
+		serverExceptions.put("banned", "IrcServerException{\"reason\"Banned};");
 		// --- Server Exceptions ---
-		serverExceptions.put("closed", "IrcServerException:Server_Closed");
-		serverExceptions.put("error", "IrcServerException:Error");
-		serverExceptions.put("cmdError", "IrcServerException:Cmd_Error"); // Sent when command failed
+//		serverExceptions.put("closed", "IrcServerException:Server_Closed");
+		serverExceptions.put("close", "IrcServerException{\"reason\"Server_Closed};");
+//		serverExceptions.put("error", "IrcServerException:Error");
+		serverExceptions.put("error", "IrcServerException{\"reason\"Error};");
+//		serverExceptions.put("cmdError", "IrcServerException:Cmd_Error"); // Sent when command failed
+		serverExceptions.put("cmdError", "IrcServerException{\"reason\"Cmd_Error};");
 		
 		// --- Warnings (All kinds) ---
-		serverWarnings.put("nick", "IrcServerWarning:NickPermission-" /** Nickname */); // Notification for non staff
+//		serverWarnings.put("nick", "IrcServerWarning:NickPermission-" /** Nickname */); // Notification for non staff
+		serverWarnings.put("nick", "IrcServerWarning{\"reason\"NickPermission};");
 		
 		// --- Notifications (All kinds) ---
-		serverNotifications.put("nick", "IrcServerNotification:NickChanged-" /** Nickname */);
+//		serverNotifications.put("nick", "IrcServerNotification:NickChanged-" /** Nickname */);
+		serverNotifications.put("nick", "IrcServerNotification{\"reason\"NickChanged,\"");
 	}
 
 	/**

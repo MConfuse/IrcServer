@@ -13,7 +13,8 @@ import java.util.Scanner;
 
 import de.confuse.TestClass;
 import de.confuse.irc.IrcManager.ClientType;
-import de.confuse.irc.message.IrcMessage;
+import de.confuse.irc.interfaces.IrcMessage;
+import de.confuse.irc.interfaces.IrcServerResponse;
 
 public class IrcClient {
 
@@ -30,9 +31,13 @@ public class IrcClient {
 		{
 			List<IrcMessage> list = new ArrayList<IrcMessage>();
 			list.add(new TestClass());
-			
-			IrcManager man = new IrcManager("localhost", 1997, null, "TestUser", "null", ClientType.AURORA);
-			
+
+			List<IrcServerResponse> responses = new ArrayList<IrcServerResponse>();
+			responses.add(new TestClass());
+
+			IrcManager man = new IrcManager("localhost", 1997, list, responses, "TestUser", "null", ClientType.AURORA);
+
+			// Console thread, don't mind this if you don't use it outside of a program
 			new Thread(() ->
 			{
 
@@ -71,6 +76,7 @@ public class IrcClient {
 			e.printStackTrace();
 		}
 		
+		// Old basic, non-chad IRC Client
 //		new IrcClient();
 	}
 
