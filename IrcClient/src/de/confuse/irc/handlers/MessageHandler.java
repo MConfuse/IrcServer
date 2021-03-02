@@ -44,7 +44,7 @@ public class MessageHandler {
 	{
 		try
 		{
-			System.out.println(message);
+			System.out.println(MessageHandler.class + ":: " + message);
 			
 			// --- Server Exceptions ---
 			if (message.startsWith("IrcServerException{\"reason\""))
