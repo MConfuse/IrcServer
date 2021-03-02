@@ -1,6 +1,6 @@
 package de.confuse;
 
-import de.confuse.irc.IrcMessage;
+import de.confuse.irc.message.IrcMessage;
 
 public class TestClass implements IrcMessage {
 

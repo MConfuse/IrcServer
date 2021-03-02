@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 import de.confuse.TestClass;
 import de.confuse.irc.IrcManager.ClientType;
+import de.confuse.irc.message.IrcMessage;
 
 public class IrcClient {
 

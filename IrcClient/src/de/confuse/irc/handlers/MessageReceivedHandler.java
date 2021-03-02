@@ -1,6 +1,9 @@
-package de.confuse.irc;
+package de.confuse.irc.handlers;
 
 import java.util.Scanner;
+
+import de.confuse.irc.IrcManager;
+import de.confuse.irc.message.IrcMessage;
 
 public class MessageReceivedHandler implements Runnable {
 

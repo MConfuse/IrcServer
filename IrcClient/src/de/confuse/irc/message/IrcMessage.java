@@ -1,4 +1,4 @@
-package de.confuse.irc;
+package de.confuse.irc.message;
 
 /**
  * This Interface needs to be implemented into every class you want to receive

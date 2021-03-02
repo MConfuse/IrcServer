@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import de.confuse.confFile.ConfFileField;
+import de.confuse.irc.handlers.CommandHandler;
+import de.confuse.irc.handlers.MessageReceivedHandler;
+import de.confuse.irc.message.IrcMessage;
 
 /**
  * The IrcManager class is a core class for the IRC-Server. This will handle
@@ -121,7 +124,7 @@ public class IrcManager {
 	{
 		// --- Closing the old connection ---
 		server.close();
-		output.close();
+		getOutput().close();
 		handler.setRunning(false);
 //		handlerThread.stop();
 
@@ -146,7 +149,7 @@ public class IrcManager {
 	{
 		// --- Closing the old connection ---
 		server.close();
-		output.close();
+		getOutput().close();
 		handler.setRunning(false);
 	}
 	
@@ -162,7 +165,7 @@ public class IrcManager {
 		field.put("type", type.name);
 		
 		System.out.println(field.getFormattedField());
-		output.println(field.getFormattedField());
+		getOutput().println(field.getFormattedField());
 	}
 	
 	/**
@@ -173,9 +176,14 @@ public class IrcManager {
 	 */
 	public static void sendMessage(String message)
 	{
-		IrcManager.INSTANCE.output.println(message);
+		CommandHandler.checkMessage(message);
 	}
 	
+	public PrintStream getOutput()
+	{
+		return output;
+	}
+
 	public enum ClientType
 	{
 		AURORA("Aurora"), KOTCLIENT("Kot"), CATSENSE("CatSense");
