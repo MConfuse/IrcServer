@@ -5,11 +5,16 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class User {
 
+	// --- Tokens ---
+	private final String devPasswords = "ndDPA563+WMNTwhd18#OWrfhp3oe5eop+WOADJ2687jjowu+g3erwp13FM2SEI7O";
+	private final String adminPasswords = "wAifb29#wEIAW6pu8gv+bawDWAWDKD5478#WAH56pwroitvmawLDWAI4Geo4u+fg";
+	private final String staffPasswords = "lDIAOWFMEI45+OFfkvn+9qaiweDLWP0LUB137#WQvmaoiDLWAnvsq#woDPAWDFwp";
+	private final String friendPasswords = "vgiwLDWZ+ivh#bwibvealoqLK1+9QCQDRnvnmLi#rzghbDWJAU+198hfgiwq92WM";
+	
 	// --- User end Stuff ---
 	private PrintStream streamOut;
 	private InputStream streamIn;
@@ -17,10 +22,6 @@ public class User {
 	private String name;
 	private final Socket client;
 	private final String password;
-	private final List<String> devPasswords;
-	private final List<String> adminPasswords;
-	private final List<String> staffPasswords;
-	private final List<String> friendPasswords;
 	public final UserType userType;
 	public final ClientType clientType;
 	
@@ -68,12 +69,7 @@ public class User {
 		this.userId = nbUser;
 		nbUser++;
 
-		devPasswords = Arrays.asList(/* Token for the Developer Rank */ 		"ndDPA563+WMNTwhd18#OWrfhp3oe5eop+WOADJ2687jjowu+g3erwp13FM2SEI7O");
-		adminPasswords = Arrays.asList(/* Token for the Administrator Rank */ 	"wAifb29#wEIAW6pu8gv+bawDWAWDKD5478#WAH56pwroitvmawLDWAI4Geo4u+fg");
-		staffPasswords = Arrays.asList(/* Token for the Staff Rank */			"lDIAOWFMEI45+OFfkvn+9qaiweDLWP0LUB137#WQvmaoiDLWAnvsq#woDPAWDFwp");
-		friendPasswords = Arrays.asList(/* Token for the Friend Rank */ 		"vgiwLDWZ+ivh#bwibvealoqLK1+9QCQDRnvnmLi#rzghbDWJAU+198hfgiwq92WM");
-
-		userType = isStaff(password);
+		userType = getType(password);
 	}
 
 	/**
@@ -82,18 +78,18 @@ public class User {
 	 * @param password Password
 	 * @return Staff
 	 */
-	private UserType isStaff(String password)
+	private UserType getType(String password)
 	{
-		if (devPasswords.contains(password))
+		if (devPasswords.equals(password))
 			return UserType.DEV;
 
-		if (adminPasswords.contains(password))
+		if (adminPasswords.equals(password))
 			return UserType.ADMIN;
 
-		if (staffPasswords.contains(password))
+		if (staffPasswords.equals(password))
 			return UserType.STAFF;
 
-		if (friendPasswords.contains(password))
+		if (friendPasswords.equals(password))
 			return UserType.FRIEND;
 		
 		if (isVerified(name))

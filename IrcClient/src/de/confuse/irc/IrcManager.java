@@ -10,14 +10,14 @@ import java.util.Scanner;
 import de.confuse.confFile.ConfFileField;
 import de.confuse.irc.handlers.MessageHandler;
 import de.confuse.irc.handlers.MessageReceivedHandler;
-import de.confuse.irc.interfaces.IrcMessage;
-import de.confuse.irc.interfaces.IrcServerResponse;
+import de.confuse.irc.interfaces.IMessage;
+import de.confuse.irc.interfaces.IServerResponse;
 
 /**
  * The IrcManager class is a core class for the IRC-Server. This will handle
  * connecting, sending and disconnecting as well as parse through received
- * messages from the IRC-Server using the {@link IrcMessage} Interface. <br>
- * The {@link IrcMessage} Interface will implement a method that is called for
+ * messages from the IRC-Server using the {@link IMessage} Interface. <br>
+ * The {@link IMessage} Interface will implement a method that is called for
  * every message this client receives from the IRC-Server.
  * 
  * @version 1
@@ -33,12 +33,12 @@ public class IrcManager {
 	 * List that should contain all classes that want to receive the Messages the
 	 * {@link MessageReceivedHandler} receives.
 	 */
-	public static List<IrcMessage> messageInterfaces;
+	public static List<IMessage> messageInterfaces;
 	/**
 	 * List that should contain all classes implementing the
-	 * {@link IrcServerResponse} Interface.
+	 * {@link IServerResponse} Interface.
 	 */
-	public static List<IrcServerResponse> responseInterfaces;
+	public static List<IServerResponse> responseInterfaces;
 	/** The Handler for incoming messages */
 	public static MessageReceivedHandler handler;
 	/** The {@link MessageReceivedHandler} Thread */
@@ -66,8 +66,8 @@ public class IrcManager {
 	 * @param host             The Hosts address
 	 * @param port             The port to connect to
 	 * @param messageInterf A {@link List} containing all the {@link Class}es
-	 *                         that implement the {@link IrcMessage} Interface.
-	 *                         Implementing the {@link IrcMessage} Interface is
+	 *                         that implement the {@link IMessage} Interface.
+	 *                         Implementing the {@link IMessage} Interface is
 	 *                         necessary so your code is notified when the
 	 *                         IRC-Server sends a message to your IRC-Client.
 	 * @param nick             The default name of the User.
@@ -79,8 +79,8 @@ public class IrcManager {
 	 * @throws IOException          Thrown when there was an error creating the
 	 *                              {@link PrintStream}.
 	 */
-	public IrcManager(String host, int port, List<IrcMessage> messageInterf,
-			List<IrcServerResponse> responseInterf, String nick, String token, ClientType type)
+	public IrcManager(String host, int port, List<IMessage> messageInterf,
+			List<IServerResponse> responseInterf, String nick, String token, ClientType type)
 			throws UnknownHostException, IOException
 	{
 		INSTANCE = this;

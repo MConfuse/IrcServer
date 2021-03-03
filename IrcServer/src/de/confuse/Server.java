@@ -13,7 +13,9 @@ import de.confuse.User.ClientType;
 import de.confuse.command.CommandManager;
 import de.confuse.command.commands.HelpCommand;
 import de.confuse.command.commands.SubscribeIrcCommand;
+import de.confuse.command.commands.ToggleNickCommand;
 import de.confuse.command.commands.UpdateNick;
+import de.confuse.confFile.ConfFileField;
 import de.confuse.confFile.ConfFileReader;
 import de.confuse.database.DataBase;
 import de.confuse.handlers.UserHandler;
@@ -25,7 +27,7 @@ public class Server {
 	// --- Server interns ---
 	private ServerSocket server;
 	private DataBase data;
-	private final double version = 0.5;
+	private final double version = 0.54;
 	private int port;
 
 	/** A List of all Users */
@@ -39,12 +41,16 @@ public class Server {
 	private boolean debugmode = false;
 	private static boolean running = true;
 	
+	private final String exception = "IrcServerException";
+	private final String warning = "IrcServerWarning";
+	private final String notification = "IrcServerNotification";
+	
 	/** Server Exception HashMap */
-	public final ConcurrentHashMap<String, String> serverExceptions = new ConcurrentHashMap<String, String>();
+	public final ConcurrentHashMap<String, ConfFileField> serverExceptions = new ConcurrentHashMap<String, ConfFileField>();
 	/** Server Warnings HashMap */
-	public final ConcurrentHashMap<String, String> serverWarnings = new ConcurrentHashMap<String, String>();
+	public final ConcurrentHashMap<String, ConfFileField> serverWarnings = new ConcurrentHashMap<String, ConfFileField>();
 	/** Server Notifications HashMap */
-	public final ConcurrentHashMap<String, String> serverNotifications = new ConcurrentHashMap<String, String>();
+	public final ConcurrentHashMap<String, ConfFileField> serverNotifications = new ConcurrentHashMap<String, ConfFileField>();
 
 	/**
 	 * Creates a new Server instance
@@ -61,28 +67,21 @@ public class Server {
 		this.clients = new ArrayList<User>();
 		this.debugmode = debug;
 		
-		// TODO: Update this to ConfFields so it's not as bad of a mess lOl
-		
 		// --- Client Exceptions ---
-//		serverExceptions.put("kicked", "IrcServerException:Kicked");
-		serverExceptions.put("kicked", "IrcServerException{\"reason\"Kicked};");
-//		serverExceptions.put("banned", "IrcServerException:Banned");
-		serverExceptions.put("banned", "IrcServerException{\"reason\"Banned};");
+		serverExceptions.put("kicked", new ConfFileField(exception).put("reason", "Kicked"));
+		serverExceptions.put("banned", new ConfFileField(exception).put("reason", "Banned"));
+		
 		// --- Server Exceptions ---
-//		serverExceptions.put("closed", "IrcServerException:Server_Closed");
-		serverExceptions.put("close", "IrcServerException{\"reason\"Server_Closed};");
-//		serverExceptions.put("error", "IrcServerException:Error");
-		serverExceptions.put("error", "IrcServerException{\"reason\"Error};");
-//		serverExceptions.put("cmdError", "IrcServerException:Cmd_Error"); // Sent when command failed
-		serverExceptions.put("cmdError", "IrcServerException{\"reason\"Cmd_Error};");
+		serverExceptions.put("close", new ConfFileField(exception).put("reason", "Server_Closed"));
+		serverExceptions.put("error", new ConfFileField(exception).put("reason", "Error"));
+		serverExceptions.put("cmdError", new ConfFileField(exception).put("reason", "Cmd_Error"));
 		
 		// --- Warnings (All kinds) ---
-//		serverWarnings.put("nick", "IrcServerWarning:NickPermission-" /** Nickname */); // Notification for non staff
-		serverWarnings.put("nick", "IrcServerWarning{\"reason\"NickPermission};");
+		serverWarnings.put("commandPermission", new ConfFileField(warning).put("reason", "CommandPermission"));
 		
 		// --- Notifications (All kinds) ---
-//		serverNotifications.put("nick", "IrcServerNotification:NickChanged-" /** Nickname */);
-		serverNotifications.put("nick", "IrcServerNotification{\"reason\"NickChanged,\"");
+		serverNotifications.put("changedNick", new ConfFileField(notification).put("reason", "ChangedNick"));
+		serverNotifications.put("unnick", new ConfFileField(notification).put("reason", "UnNicked"));
 	}
 
 	/**
@@ -106,6 +105,7 @@ public class Server {
 		commandManager.addCommand(new HelpCommand());
 		commandManager.addCommand(new SubscribeIrcCommand());
 		commandManager.addCommand(new UpdateNick());
+		commandManager.addCommand(new ToggleNickCommand());
 		
 		
 		System.out.println("Server V" + version + " online!");
@@ -130,6 +130,9 @@ public class Server {
 				// Password and Nick
 				String nickname = reader.getField("login").getValue("nickname");
 				String password = reader.getField("login").getValue("password");
+				
+				// TODO: Check if the HWID matches with the database
+				isVerified("");
 				
 				// Sets the ClientType
 				ClientType type = getType(reader.getField("login").getValue("type"));
@@ -202,6 +205,11 @@ public class Server {
 			client.getOutStream().println(this.clients);
 		}
 
+	}
+	
+	private boolean isVerified(String hwid)
+	{
+		return true;
 	}
 
 	/**

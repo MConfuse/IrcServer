@@ -11,8 +11,8 @@ import java.util.List;
  * keys using the {@link #put(String, String)} method and retrieve a fully
  * formatted {@link String} using the {@link #getFormattedField()} method.
  * 
- * @version 1
- * @author Confuse/xXConfusedJenni#5117
+ * @version 1.1
+ * @author Confuse/Confuse#5117
  *
  */
 public class ConfFileField {
@@ -38,17 +38,22 @@ public class ConfFileField {
 	}
 
 	/**
-	 * This method is used to easily add new values with their specific key.
-	 * 
+	 * This method is used to easily add new values with their specific key.<br>
+	 * This will also return this {@link ConfFileField}s Instance in case you want
+	 * to add something else in one line.<br>
+	 * <br>
 	 * Note: Having characters like the following ones within the key or value might
 	 * cause the retrieval to fail or not return the correct values: "" , { }
 	 * 
 	 * @param key   The key to retrieve the assigned value
 	 * @param value The actual value that can be obtained using the assigned key
+	 * @return This {@link ConfFileField}s instance
 	 */
-	public void put(String key, String value)
+	public ConfFileField put(String key, String value)
 	{
 		content.add("\"" + key + "\"" + value);
+		
+		return this;
 	}
 
 	/**

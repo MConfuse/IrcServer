@@ -10,7 +10,7 @@ package de.confuse.irc.interfaces;
  * @author Confuse/Confuse#5117
  *
  */
-public interface IrcMessage {
+public interface IMessage {
 	
 	public void messageReceived(String message);
 

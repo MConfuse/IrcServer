@@ -9,7 +9,7 @@ import de.confuse.confFile.ConfFileField;
 import de.confuse.confFile.ConfFileReader;
 import de.confuse.confFile.ConfResult;
 import de.confuse.irc.IrcManager;
-import de.confuse.irc.interfaces.IrcServerResponse;
+import de.confuse.irc.interfaces.IServerResponse;
 
 public class MessageHandler {
 
@@ -34,7 +34,7 @@ public class MessageHandler {
 
 	/**
 	 * Depending on the exception the fitting method in the
-	 * {@link IrcServerResponse} Interface will be called.
+	 * {@link IServerResponse} Interface will be called.
 	 * 
 	 * @param message The message to check
 	 * @return False if the message does not contain an error message or anything
@@ -59,28 +59,28 @@ public class MessageHandler {
 				switch (reason)
 				{
 					case "Kicked":
-						for (IrcServerResponse resp : IrcManager.responseInterfaces)
+						for (IServerResponse resp : IrcManager.responseInterfaces)
 							resp.kickedFromIrc();
 						break;
 
 					case "Banned":
-						for (IrcServerResponse resp : IrcManager.responseInterfaces)
+						for (IServerResponse resp : IrcManager.responseInterfaces)
 							resp.bannedFromIrc();
 						break;
 
 					case "Server_Closed":
-						for (IrcServerResponse resp : IrcManager.responseInterfaces)
+						for (IServerResponse resp : IrcManager.responseInterfaces)
 							resp.serverClosed();
 						break;
 
 					case "Error":
-						for (IrcServerResponse resp : IrcManager.responseInterfaces)
+						for (IServerResponse resp : IrcManager.responseInterfaces)
 							resp.serverError();
 						break;
 
 					case "Cmd_Error":
-						for (IrcServerResponse resp : IrcManager.responseInterfaces)
-							resp.commandError();
+						for (IServerResponse resp : IrcManager.responseInterfaces)
+							resp.commandError(field.getValue("command"), field.getValue("syntax"), field.getValue("extra"));
 						break;
 				}
 
@@ -96,9 +96,9 @@ public class MessageHandler {
 
 				switch (reason)
 				{
-					case "NickPermission":
-						for (IrcServerResponse resp : IrcManager.responseInterfaces)
-							resp.nickPermission();
+					case "CommandPermission":
+						for (IServerResponse resp : IrcManager.responseInterfaces)
+							resp.commandPermission(field.getValue("command"), field.getValue("extra"));
 						break;
 
 				}
@@ -115,9 +115,14 @@ public class MessageHandler {
 
 				switch (reason)
 				{
-					case "NickChanged":
-						for (IrcServerResponse resp : IrcManager.responseInterfaces)
+					case "ChangedNick":
+						for (IServerResponse resp : IrcManager.responseInterfaces)
 							resp.nickChanged(field.getValue("name"));
+						break;
+						
+					case "UnNicked":
+						for (IServerResponse resp : IrcManager.responseInterfaces)
+							resp.unNicked();
 						break;
 
 				}
@@ -149,18 +154,21 @@ public class MessageHandler {
 		String[] args = message.split(" ");
 		String command = args[0];
 		
-		// --- Nick Command ---
+		// --- Nick/uName Command ---
 		if (nickAlias.contains(command))
 		{
+			boolean uname = command.equals("uname");
+
 			ConfFileField field = new ConfFileField("data");
 			field.put("ingameName", man.getName());
-			field.put("customName", args[1]);
-			
-			out.println("/nick " + field.getFormattedField());
+			field.put("customName", uname ? man.getName() : args[1]);
+
+			out.println("/" + (uname ? "uname" : args[0]) + " " + field.getFormattedField());
+			return;
 		}
 		
 		// TODO: Add the actual handler
-//		IrcManager.INSTANCE.getOutput().println("/" + message);
+		IrcManager.INSTANCE.getOutput().println("/" + message);
 	}
 
 }

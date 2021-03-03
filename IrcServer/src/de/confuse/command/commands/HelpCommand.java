@@ -24,9 +24,10 @@ public class HelpCommand extends Command {
 		builder.append("| \n");
 		builder.append("|------ Staff Commands -----\n");
 		builder.append("| /info (name) - Gives you Info about the User\n");
-		builder.append("| /nick (nick) - Changes your Name!\n");
-		builder.append("| /hide - Un-/hides your rank!\n");
-		builder.append("| /ban (name) - Bans the User\n");
+		builder.append("| /nick (nick) - Changes your Name\n");
+		builder.append("| /tnick - Toggles the nick\n");
+		builder.append("| /hide - Un-/hides your rank\n");
+		builder.append("| /ban (name) - Permanently bans the User!\n");
 		builder.append("| /kick (name) - Kicks the User\n");
 		builder.append("| \n");
 		builder.append("\\---------------------------");

@@ -2,7 +2,9 @@ package de.confuse.command;
 
 import java.io.PrintStream;
 
+import de.confuse.Server;
 import de.confuse.User;
+import de.confuse.confFile.ConfFileField;
 
 /**
  * Commands for managing Settings and other stuff on a text basis.
@@ -55,6 +57,40 @@ public abstract class Command {
 	 */
 	public abstract void onCommand(String command, String[] args, String message, User user, PrintStream stream)
 			throws Exception;
+	
+	/**
+	 * Sends the {@link User} who sent this command request an error message
+	 * containing everything they might need.
+	 * 
+	 * @param stream  The {@link PrintStream} of the sender
+	 * @param extra   Any extra text for special cases
+	 */
+	public void sendErrorMessage(PrintStream stream, String extra)
+	{
+		ConfFileField field = Server.instance.serverExceptions.get("cmdError");
+		
+		if (extra != null)
+			field.put("extra", extra);
+
+		stream.println(field.put("command", getName()).put("syntax", getSyntax()).getFormattedField());
+	}
+
+	/**
+	 * Notifies the {@link User} who sent this command request that they do not have
+	 * the required permissions to use this command.
+	 * 
+	 * @param stream The {@link PrintStream} of the sender
+	 * @param extra  Any extra text for special cases
+	 */
+	public void missingPermissions(PrintStream stream, String extra)
+	{
+		ConfFileField field = Server.instance.serverWarnings.get("commandPermission");
+		
+		if (extra != null)
+			field.put("extra", extra);
+		
+		stream.println(field.put("command", getName()).getFormattedField());
+	}
 
 	public String getName()
 	{

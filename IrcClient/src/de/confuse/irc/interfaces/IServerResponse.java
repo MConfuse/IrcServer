@@ -8,7 +8,7 @@ package de.confuse.irc.interfaces;
  * @author Confuse/Confuse#5117
  *
  */
-public interface IrcServerResponse {
+public interface IServerResponse {
 
 	// --- 					 ---
 	// --- Client Exceptions ---
@@ -40,21 +40,31 @@ public interface IrcServerResponse {
 	
 	/**
 	 * Called when there was an error while executing a command. This can be due to
-	 * a typos or syntax errors.
+	 * a typos or syntax errors.<br>
+	 * <br>
+	 * Note:<br>
+	 * The "extra" String is null if the message was not set!
+	 * 
+	 * @param command The command that failed
+	 * @param syntax  The command usage
+	 * @param extra   Specific information for rare or specific errors || <strong>
+	 *                null </strong>
 	 */
-	public void commandError();
+	public void commandError(String command, String syntax, String extra);
 	
 	// ---			---
 	// --- Warnings ---
 	// --- 			---
 
 	/**
-	 * NOTE: This may get removed later on and streamlined into one with
-	 * {@link #commandError()}! <br>
-	 * <br>
-	 * Called when the "nick" command failed due to insufficient permissions.
+	 * Called when the User does not have the required permissions to use the
+	 * specified command.
+	 * 
+	 * @param command The command that failed
+	 * @param extra   Specific information for rare or specific errors || <strong>
+	 *                null </strong>
 	 */
-	public void nickPermission();
+	public void commandPermission(String command, String extra);
 	
 	// --- 				 ----
 	// --- Notifications ----
@@ -67,4 +77,9 @@ public interface IrcServerResponse {
 	 * @param newName The new alias.
 	 */
 	public void nickChanged(String newName);
+	
+	/**
+	 * Called when you successfully unnicked yourself.
+	 */
+	public void unNicked();
 }

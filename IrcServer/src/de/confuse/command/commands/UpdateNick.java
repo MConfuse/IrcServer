@@ -12,7 +12,7 @@ public class UpdateNick extends Command {
 	public UpdateNick()
 	{
 		// uName is the alias for normal users to update their nick.
-		super("nick", new String[] {"uname"}, "/nick (name)", "name", "Changes your IRC Username!");
+		super("nick", new String[] {"uname"}, "/nick (name) || /uname", "name", "Changes your IRC Username!");
 	}
 
 	@Override
@@ -27,10 +27,29 @@ public class UpdateNick extends Command {
 		
 		System.out.println(message);
 		System.out.println(message.substring(5));
-		ConfFileReader reader = new ConfFileReader(message.substring(5), 1D);
+		
+		// Reading the content
+		ConfFileReader reader = null;
+		if (command.equals("uname"))
+			reader = new ConfFileReader(message.substring(6), 1D);
+		else
+			reader = new ConfFileReader(message.substring(5), 1D);
 		
 		try
 		{
+			if (command.equals("uname"))
+			{
+				System.out.println("Reached: uName");
+				String name = reader.getField("data").getValue("ingameName");
+				
+				user.setNickname(name);
+				
+				// --- Notifies the User about the changed Nick ---
+				stream.println(Server.instance.serverNotifications.get("nickChanged").put("name", user.getNickname())
+						.getFormattedField());
+				return;
+			}
+			
 			// --- If User is staff the custom nick will be used ---
 			if (user.isStaff())
 			{
@@ -41,9 +60,10 @@ public class UpdateNick extends Command {
 				
 				user.setNickname(name);
 				user.setNicked(true);
-				
+
 				// --- Notifies the User about the changed Nick ---
-				stream.println(Server.instance.serverNotifications.get("nick") + "name\"" + name + "};");
+				stream.println(Server.instance.serverNotifications.get("nickChanged").put("name", user.getNickname())
+						.getFormattedField());
 			}
 			else // If user is not staff, the normal name will be updated.
 			{
@@ -57,14 +77,14 @@ public class UpdateNick extends Command {
 				user.setNicked(false);
 				
 				// --- Notifies the User about the failed Nick ---
-				stream.println(Server.instance.serverWarnings.get("nick"));
+				missingPermissions(stream, null);
 			}
 			
 		}
 		catch (Exception e)
 		{
 			System.out.println(e.getMessage());
-			stream.println(Server.instance.serverExceptions.get("cmdError"));
+			sendErrorMessage(stream, null);
 		}
 		
 	}

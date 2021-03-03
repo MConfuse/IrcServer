@@ -1,9 +1,9 @@
 package de.confuse;
 
-import de.confuse.irc.interfaces.IrcMessage;
-import de.confuse.irc.interfaces.IrcServerResponse;
+import de.confuse.irc.interfaces.IMessage;
+import de.confuse.irc.interfaces.IServerResponse;
 
-public class TestClass implements IrcMessage, IrcServerResponse {
+public class TestClass implements IMessage, IServerResponse {
 
 	public TestClass()
 	{
@@ -45,15 +45,15 @@ public class TestClass implements IrcMessage, IrcServerResponse {
 	}
 
 	@Override
-	public void commandError()
+	public void commandError(String command, String syntax, String extra)
 	{
-		System.out.println("Command error!");
+		System.out.println("Command error! | " + command + " - " + syntax);
 	}
 
 	@Override
-	public void nickPermission()
+	public void commandPermission(String command, String extra)
 	{
-		System.out.println("Nick permission!");
+		System.out.println("Command permission missing! " + command + " || " + extra);
 		
 	}
 
@@ -61,6 +61,12 @@ public class TestClass implements IrcMessage, IrcServerResponse {
 	public void nickChanged(String newName)
 	{
 		System.out.println("Nick changed to: " + newName + "!");
+	}
+
+	@Override
+	public void unNicked()
+	{
+		System.out.println("Unnicked!");
 	}
 
 }

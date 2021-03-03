@@ -13,8 +13,8 @@ import java.util.Scanner;
 
 import de.confuse.TestClass;
 import de.confuse.irc.IrcManager.ClientType;
-import de.confuse.irc.interfaces.IrcMessage;
-import de.confuse.irc.interfaces.IrcServerResponse;
+import de.confuse.irc.interfaces.IMessage;
+import de.confuse.irc.interfaces.IServerResponse;
 
 public class IrcClient {
 
@@ -29,10 +29,10 @@ public class IrcClient {
 	{
 		try
 		{
-			List<IrcMessage> list = new ArrayList<IrcMessage>();
+			List<IMessage> list = new ArrayList<IMessage>();
 			list.add(new TestClass());
 
-			List<IrcServerResponse> responses = new ArrayList<IrcServerResponse>();
+			List<IServerResponse> responses = new ArrayList<IServerResponse>();
 			responses.add(new TestClass());
 
 			IrcManager man = new IrcManager("localhost", 1997, list, responses, "TestUser", "null", ClientType.AURORA);
