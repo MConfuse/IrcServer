@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * a new instance of this class!
  * 
  * @version 1.1
- * @author Confuse/xXConfusedJenni#5117
+ * @author Confuse/Confuse#5117
  *
  */
 public class ConfFileReader {

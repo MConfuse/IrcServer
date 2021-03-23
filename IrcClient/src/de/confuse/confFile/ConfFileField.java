@@ -12,7 +12,7 @@ import java.util.List;
  * formatted {@link String} using the {@link #getFormattedField()} method.
  * 
  * @version 1
- * @author Confuse/xXConfusedJenni#5117
+ * @author Confuse/Confuse#5117
  *
  */
 public class ConfFileField {

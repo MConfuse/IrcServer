@@ -9,8 +9,21 @@ import de.confuse.confFile.ConfFileField;
 import de.confuse.confFile.ConfFileReader;
 import de.confuse.confFile.ConfResult;
 import de.confuse.irc.IrcManager;
+import de.confuse.irc.interfaces.IMessage;
 import de.confuse.irc.interfaces.IServerResponse;
 
+/**
+ * The general message handler that checks every incoming and outgoing message
+ * from and to the IRC-Server. <br>
+ * This Class will format commands written by the User to fit the needed format
+ * and will handle incoming Server responses using the {@link IServerResponse}
+ * Interface as well as notify your code of the normal messages broadcasted by
+ * the IRC-Server using the {@link IMessage} Interface.
+ * 
+ * @version 1
+ * @author Confuse/Confuse#5117
+ *
+ */
 public class MessageHandler {
 
 	// --- Command alias ---

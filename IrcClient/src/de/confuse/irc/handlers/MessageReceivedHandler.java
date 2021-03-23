@@ -5,6 +5,14 @@ import java.util.Scanner;
 import de.confuse.irc.IrcManager;
 import de.confuse.irc.interfaces.IMessage;
 
+/**
+ * Handler {@link Thread} that receives all incoming messages from the Server.
+ * This will check the incoming messages using the {@link MessageHandler}s
+ * {@link MessageHandler#checkIncomingMessage(String)} method.
+ * 
+ * @author Confuse/Confuse#5117
+ *
+ */
 public class MessageReceivedHandler implements Runnable {
 
 	/** The Scanner that scans the Server's output stream */

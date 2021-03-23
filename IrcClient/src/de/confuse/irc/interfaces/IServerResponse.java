@@ -2,7 +2,9 @@ package de.confuse.irc.interfaces;
 
 /**
  * When implemented, this Interface will add the methods needed to handle all
- * kinds of Server errors and background responses.
+ * kinds of Server errors and background responses. <br>
+ * It is recommended to create a custom handler using this Interface and
+ * override the needed methods when needed.
  * 
  * @version 1
  * @author Confuse/Confuse#5117

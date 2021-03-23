@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * retrieved or only partially.
  * 
  * @version 1
- * @author Confuse/xXConfusedJenni#5117
+ * @author Confuse/Confuse#5117
  *
  */
 public class ConfResult {
