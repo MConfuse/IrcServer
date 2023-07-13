@@ -1,3 +1,6 @@
+!!Archived for a reason!!
+Unsecure, unreliable, a nightmare to work with :D.
+
 # IrcServer
 A Minecraft IRC Server
 
